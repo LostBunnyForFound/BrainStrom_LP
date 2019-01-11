@@ -17,6 +17,7 @@ from keras.optimizers import RMSprop
 import numpy as np
 import pandas as pd
 
+# read file
 batch_size = 128
 num_classes = 2
 epochs = 35
@@ -29,7 +30,7 @@ def load_dataset(filename):
             pairs.append(((float(ts[0]), float(ts[1]),float(ts[2]),int(ts[3]))))
     return pd.DataFrame(pairs, columns=["feature1", "feature2","feature3","label"])
 
-
+#load features file
 dataset = load_dataset("capture_feature.txt")
 fv = dataset[["feature1","feature2","feature3"]]
 lv = dataset['label']
@@ -54,7 +55,7 @@ X_for_test = testdata[["feature1", "feature2","feature3"]]
 # the data, split between train and test sets
 #(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-
+# reshape the input
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 
@@ -65,6 +66,7 @@ print(x_test.shape[0], 'test samples')
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
+# build keras sequential network
 model = Sequential()
 model.add(Dense(512, activation='relu', input_shape=(NUM_FEATURES,)))
 model.add(Dropout(0.2))
@@ -87,6 +89,7 @@ score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
+# save model prediction
 classes = model.predict(X_for_test, batch_size=128)
 res = [value[1] for value in classes]
 index = np.arange(1,len(testdata)+1)
